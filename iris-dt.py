@@ -7,10 +7,11 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
 import dagshub
+import joblib
 
-dagshub.init(repo_owner='Aryanupadhyay23', repo_name='mlflow-dagshub-demo', mlflow=True)
+dagshub.init(repo_owner='', repo_name='', mlflow=True)
 
-mlflow.set_tracking_uri("https://dagshub.com/Aryanupadhyay23/mlflow-dagshub-demo.mlflow")
+mlflow.set_tracking_uri("")
 
 # Load the iris dataset
 iris = load_iris()
@@ -21,7 +22,7 @@ y = iris.target
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Define the parameters for the Random Forest model
-max_depth = 20
+max_depth = 50
 
 # apply mlflow
 
@@ -51,7 +52,9 @@ with mlflow.start_run():
     plt.savefig("confusion_matrix.png")
     mlflow.log_artifact("confusion_matrix.png")
     mlflow.log_artifact(__file__)
-    mlflow.sklearn.log_model(dt, "decision tree")
+
+    joblib.dump(dt, "decision_tree.pkl")
+    mlflow.log_artifact("decision_tree.pkl")
 
     mlflow.set_tag("author","Aryan")
     mlflow.set_tag("model","decision tree")
